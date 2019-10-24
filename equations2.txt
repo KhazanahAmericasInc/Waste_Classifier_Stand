@@ -1,0 +1,15 @@
+﻿"D16@Sketch1"="base depth"
+"D12@Sketch1"="upper segment angle"
+"D13@Sketch1"="upper segment angle"
+"D14@Sketch1"="upper segment angle"
+"D15@Sketch1"="upper segment angle"
+"D18@Sketch1"="fov"
+"D19@Sketch1"=(180-"fov")/2
+"D6@Sketch1"="upper segment angle"/2
+"D7@Sketch1"="upper segment angle"/2
+"D8@Sketch1"="upper segment angle"/2
+"D17@Sketch1"="upper segment angle"
+"D21@Sketch1"="upper segment angle"/2
+"D1@Sketch2"="Thinner acrylic"
+"D2@Sketch2"="Thinner acrylic"
+"D1@Boss-Extrude2"="Thicker acrylic"
