@@ -1,13 +1,15 @@
 #include <CapacitiveSensor.h>
-CapacitiveSensor Sensor = CapacitiveSensor(4,6);
+CapacitiveSensor Sensor = CapacitiveSensor(2,3);
 
 
 long val;
-#define led 13
-#define threshold 1000
+#define led 4
+#define threshold 15000
+#define hysteresis 5000
 
 unsigned long delayStart = 0; // the time the delay started
 bool lightOn = false; // true if still waiting for delay to finish
+bool above = true; //
 
 void setup() {
   Serial.begin(9600);
@@ -19,22 +21,35 @@ void loop() {
   val = Sensor.capacitiveSensor(30);
   Serial.println(val);
 
-  if (val >= threshold && lightOn == false)
+  //Double checks value if reading is above threshhold 
+  if (val >= threshold)
   {
-    digitalWrite(led, HIGH);
-    lightOn = true;
-    delayStart = millis();
-    delay (400);
+    val = Sensor.capacitiveSensor(30);
   }
 
-  else if (val >= threshold && lightOn == true)
+  if (above && val < (threshold-hysteresis))
   {
-    digitalWrite(led, LOW);
-    lightOn = false;
-    delay (400);
+    above = false;
   }
 
-  if (lightOn && ((millis() - delayStart) >= 10000))
+  else if (!above && val >= threshold)
+  {
+    if (lightOn == false)
+    {
+      digitalWrite(led, HIGH);
+      lightOn = true;
+      delayStart = millis();
+    }
+  
+    else
+    {
+      digitalWrite(led, LOW);
+      lightOn = false;
+    }
+    above = true;
+  }
+
+  if (lightOn && ((millis() - delayStart) >= 300000))
   {
     lightOn = false;
     digitalWrite(led, LOW);
