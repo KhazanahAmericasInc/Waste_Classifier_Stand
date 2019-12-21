@@ -9,7 +9,6 @@
 //Creates sensor object attached to pins 2 and 3
 CapacitiveSensor Sensor = CapacitiveSensor(2,3);
 
-bool start = false;
 
 long val; //used to store sensor reading 
 
@@ -19,10 +18,13 @@ long val; //used to store sensor reading
 //Adjust these value below to change touch sensitivity
 
 //*************************************
-#define threshold 700
-#define hysteresis 500
+#define threshold 100
+#define hysteresis 50
 //*************************************
 
+int previous = 0;
+int current = 0;
+int diff = 0;
 
 unsigned long delayStart = 0; // the time the delay started
 bool lightOn = false; // true if light is on
@@ -32,27 +34,22 @@ void setup() {
   Serial.begin(9600);
   pinMode(led, OUTPUT);
   delay(500);
+  digitalWrite(led, HIGH);
+  delay(500);
+  digitalWrite(led, LOW);
+
 }
 
 void loop() {
-  val = Sensor.capacitiveSensor(30); //Gets reading from sensor
-  Serial.println(val);
+  
+  current = Sensor.capacitiveSensor(30); //Gets reading from sensor
+  Serial.print(current);
 
-  //Double checks value if reading is above threshhold 
-  if (val >= threshold)
-  {
-    val = Sensor.capacitiveSensor(30);
-  }
+  diff = current - previous;
+  Serial.print("******  ");
+  Serial.println(diff);
 
-
-  //If value was above threshold and has now dropped below, set above to false so light can be touched again
-  if (above && val < (threshold-hysteresis))
-  {
-    above = false;
-  }
-
-  //Toggle light if touched
-  else if (!above && val >= threshold)
+  if (diff > threshold)
   {
     if (lightOn == false)
     {
@@ -66,8 +63,9 @@ void loop() {
       digitalWrite(led, LOW);
       lightOn = false;
     }
-    above = true;
   }
+
+
 
 
   //Turn off light after 5 minutes
@@ -77,4 +75,7 @@ void loop() {
     digitalWrite(led, LOW);
     
   }
+
+  previous = current;
+  
 }
